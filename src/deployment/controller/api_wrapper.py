@@ -1,10 +1,11 @@
+import sys
 from time import sleep
 from typing import Mapping, List, Optional, Union
 
 import requests
 
-from src.conf.conf_parser import ConfigLoader
-from src.main.utils.logger import ConsoleLogger
+from src.main.conf.conf_parser import ConfigLoader
+from src.utils.logger import ConsoleLogger
 
 
 class DOProvider:
@@ -23,7 +24,7 @@ class DOProvider:
     @classmethod
     def create_vps(
             cls, droplet_name: str, api_slug: str, region: str, image: str, count: int, tag: List[str], ssh_keys: Optional[List[str]] = None
-    ) -> bool:
+    ) -> str:
 
         payload = {
             "names": [droplet_name + "-" + str(x + 1) for x in range(count)],
@@ -62,7 +63,7 @@ class DOProvider:
                     sleep(5)
         else:
             cls.logger.error(f"Failed to create {droplet_name}: {response.json()}")
-            return False
+            sys.exit(1)
 
     @classmethod
     def add_ssh_key(cls, key_name, public_key):

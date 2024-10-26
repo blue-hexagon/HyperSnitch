@@ -1,0 +1,16 @@
+[app.deploy.vps]
+vps_name="HyperSnitch"
+api_slug="s-1vcpu-512mb-10gb"
+image="debian-12-x64"
+count=1
+tags=['hypersnitch-primary']
+region="fra1"
+
+[app.deploy.ssh]
+keyfile_name="id_rsa"
+pubkey_remote_name="HyperSnitchKey"
+passphrase="rootroot"
+key_bits=4096
+
+[app.deploy.folder]
+folder="~/hypersnitch"

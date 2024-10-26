@@ -1,6 +1,7 @@
 import logging
 
-from src.main.utils.singleton import Singleton
+from src.utils.path_manager import PathManager
+from src.utils.singleton import Singleton
 
 
 class ConsoleLogger(metaclass=Singleton):
@@ -8,12 +9,19 @@ class ConsoleLogger(metaclass=Singleton):
         self.logger = logging.getLogger(name)
         self.logger.setLevel(logging.DEBUG)
 
+        # Console Handler
         console_handler = logging.StreamHandler()
         console_handler.setLevel(logging.DEBUG)
-
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         console_handler.setFormatter(formatter)
         self.logger.addHandler(console_handler)
+
+        # File Handler
+        log_file_path = PathManager().root.joinpath('app.log')
+        file_handler = logging.FileHandler(log_file_path)
+        file_handler.setLevel(logging.DEBUG)
+        file_handler.setFormatter(formatter)
+        self.logger.addHandler(file_handler)
 
     def debug(self, message: str) -> None:
         self.logger.debug(message)

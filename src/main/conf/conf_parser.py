@@ -3,8 +3,8 @@ import os
 import toml
 from dotenv import load_dotenv
 
-from src.conf.conf_classes import AppConfig, Target, ScannerConfig, SMTPConfig, DigitalOcean
-from src.main.utils.singleton import Singleton
+from src.main.conf.conf_classes import AppConfig, Target, ScannerConfig, SMTPConfig, DigitalOcean
+from src.utils.singleton import Singleton
 
 
 class ConfigLoader(metaclass=Singleton):

@@ -1,22 +1,22 @@
-import asyncio
-
-from playwright.async_api import async_playwright
-
-from src.conf.conf_classes import Target
-from src.conf.conf_parser import ConfigLoader
+from src.main.conf.conf_classes import Target
+from src.main.conf.conf_parser import ConfigLoader
 from src.main.events.result import EventResult
 from src.main.notifier.smtp import send_email
 from src.main.scraping.status import Status
 from src.main.utils.domain import get_subdomain_domain_tld
-from src.main.utils.logger import ConsoleLogger
-from playwright.sync_api import sync_playwright, Playwright
+from src.utils.logger import ConsoleLogger
+from playwright.sync_api import sync_playwright
+
 
 class Scraper:
     @staticmethod
     def search_string_on_website(url: str, search_string: str, target_id: str):
         logger = ConsoleLogger()
+        logger.info("Entering scraper")
         with sync_playwright() as p:
-            browser = p.chromium.launch()
+            logger.info("Entering playwright-with - launching chrome")
+            browser = p.chromium.launch(headless=True)
+            logger.info("launched chrome")
             page = browser.new_page()
             logger.info(f"[{target_id}] Start searching for `{search_string}` on: {get_subdomain_domain_tld(url)}")
             page.goto(url)

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from src.main.utils.singleton import Singleton
+from src.utils.singleton import Singleton
 
 
 class PathManager(metaclass=Singleton):

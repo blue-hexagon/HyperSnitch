@@ -1,8 +1,8 @@
 import sys
 from threading import Thread
 
-from src.conf.conf_classes import ScannerConfig
-from src.conf.conf_parser import ConfigLoader
+from src.main.conf.conf_classes import ScannerConfig
+from src.main.conf.conf_parser import ConfigLoader
 from src.main.events.result import EventResult
 from src.main.scanning.scanner import Scanner
 from src.main.scraping.scraper import Scraper

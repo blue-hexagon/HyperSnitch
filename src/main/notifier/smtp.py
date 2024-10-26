@@ -3,7 +3,7 @@ from email.mime.text import MIMEText
 from dataclasses import dataclass
 from typing import List
 
-from src.main.utils.logger import ConsoleLogger
+from src.utils.logger import ConsoleLogger
 
 
 @dataclass

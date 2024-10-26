@@ -1,10 +1,10 @@
 import time
 from datetime import timedelta, datetime
-from typing import Tuple, Any, Callable
+from typing import Tuple, Callable
 
-from src.conf.conf_classes import ScannerConfig, Target
+from src.main.conf.conf_classes import ScannerConfig, Target
 from src.main.events.result import EventResult
-from src.main.utils.logger import ConsoleLogger
+from src.utils.logger import ConsoleLogger
 
 
 class Scanner:

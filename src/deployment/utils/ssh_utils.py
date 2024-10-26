@@ -3,8 +3,8 @@ from pathlib import Path
 
 import paramiko
 
-from src.conf.path_manager import PathManager
-from src.main.utils.logger import ConsoleLogger
+from src.utils.logger import ConsoleLogger
+from src.utils.path_manager import PathManager
 
 
 class SshUtils:

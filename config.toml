@@ -7,7 +7,7 @@ scanner_id = "scanner1"
 [[app.scanner]]
 scan_interval = "0:00:00:10"
 scan_start = "06:00:00"
-scan_end = "20:00:00"
+scan_end = "22:00:00"
 scanner_id = "sc"
 
 [[app.targets]]

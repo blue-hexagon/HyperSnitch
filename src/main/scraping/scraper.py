@@ -9,34 +9,34 @@ from src.main.notifier.smtp import send_email
 from src.main.scraping.status import Status
 from src.main.utils.domain import get_subdomain_domain_tld
 from src.main.utils.logger import ConsoleLogger
-
+from playwright.sync_api import sync_playwright, Playwright
 
 class Scraper:
     @staticmethod
-    async def search_string_on_website(url: str, search_string: str, target_id: str):
+    def search_string_on_website(url: str, search_string: str, target_id: str):
         logger = ConsoleLogger()
-        async with async_playwright() as p:
-            browser = await p.chromium.launch()
-            page = await browser.new_page()
+        with sync_playwright() as p:
+            browser = p.chromium.launch()
+            page = browser.new_page()
             logger.info(f"[{target_id}] Start searching for `{search_string}` on: {get_subdomain_domain_tld(url)}")
-            await page.goto(url)
+            page.goto(url)
 
-            await page.wait_for_load_state('networkidle')  # Wait for the page to load completely
+            page.wait_for_load_state('networkidle')  # Wait for the page to load completely
 
-            content = await page.content()  # Get the page content
+            content = page.content()  # Get the page content
 
             if search_string in content:
                 status = Status.FOUND
             else:
                 status = Status.NOT_FOUND
 
-            await browser.close()
+            browser.close()
             return status
 
     @staticmethod
     def scrape_target(target: Target, event_result: EventResult) -> None:
         logger = ConsoleLogger()
-        found_match: Status = asyncio.run(
+        found_match: Status = (
             Scraper().search_string_on_website(
                 target.target_url,
                 target.target_string,

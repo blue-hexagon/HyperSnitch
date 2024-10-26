@@ -66,10 +66,10 @@ if __name__ == '__main__':
         """echo 'export PATH="$HOME/.local/bin:$PATH"' >> .bashrc """,
         "source $HOME/.bashrc",
         f"git clone {repo_url} {app_directory}",
-        f"cd {app_directory} && poetry install "
-        f"cd {app_directory} && poetry run playwright install"
-        f"cd {app_directory} && poetry run playwright install-deps"
-        f"cd {app_directory} && poetry run python main.py"
+        f"cd {app_directory} && poetry install",
+        f"cd {app_directory} && poetry run playwright install-deps",
+        f"cd {app_directory} && poetry run playwright install",
+        f"cd {app_directory} && poetry run python main.py",
     ]
 
     for command in commands:

@@ -13,7 +13,7 @@ class DOProvider:
         but could make use of some refactoring and additonal HTTP status checks branching
      """
     api_base_url = "https://api.digitalocean.com/v2"
-    api_key: str = ConfigLoader().load_config().digital_ocean.api_key
+    api_key: str = ConfigLoader().load_config(with_env=True).digital_ocean.api_key
     logger = ConsoleLogger()
 
     @classmethod

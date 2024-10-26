@@ -9,7 +9,7 @@ from src.main.utils.singleton import Singleton
 
 class ConfigLoader(metaclass=Singleton):
     @staticmethod
-    def load_config(file_path: str = "config.toml", with_env:bool = False) -> AppConfig:
+    def load_config(file_path: str = "config.toml", with_env: bool = False) -> AppConfig:
         if with_env:
             load_dotenv()
         config_data = toml.load(file_path)

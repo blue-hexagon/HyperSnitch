@@ -10,32 +10,30 @@ from src.main.utils.ssh_utils import SshUtils
 
 if __name__ == '__main__':
     logger = ConsoleLogger()
-    if True:
-        DOProvider.delete_ssh_key("WebSnitchSshKey")
-        DOProvider.destroy_vps("websnitch")
-        sutils = SshUtils(keyfile_name="id_rsa", passphrase="rootroot")
-        sutils.create_ssh_key_pair(key_bits=4096)
-        pub_key = sutils.read_public_key()
+    DOProvider.delete_ssh_key("WebSnitchSshKey")
+    DOProvider.destroy_vps("websnitch")
+    sutils = SshUtils(keyfile_name="id_rsa", passphrase="rootroot")
+    sutils.create_ssh_key_pair(key_bits=4096)
+    pub_key = sutils.read_public_key()
 
-        DOProvider().add_ssh_key("WebSnitchSshKey", pub_key)
-        ssh_key_fingerprints = DOProvider().get_ssh_key_fingerprints_from_names(["WebSnitchSshKey"])
-        droplet_ip = DOProvider().create_vps(droplet_name="websnitch",
-                                             api_slug="s-1vcpu-512mb-10gb",
-                                             image="debian-12-x64",
-                                             count=1,
-                                             tag=["websnitch"],
-                                             ssh_keys=ssh_key_fingerprints,
-                                             region="fra1")
-        if droplet_ip is not False:
-            hostname = droplet_ip
-        else:
-            sys.exit(0)
+    DOProvider().add_ssh_key("WebSnitchSshKey", pub_key)
+    ssh_key_fingerprints = DOProvider().get_ssh_key_fingerprints_from_names(["WebSnitchSshKey"])
+    droplet_ip = DOProvider().create_vps(droplet_name="websnitch",
+                                         api_slug="s-1vcpu-512mb-10gb",
+                                         image="debian-12-x64",
+                                         count=1,
+                                         tag=["websnitch"],
+                                         ssh_keys=ssh_key_fingerprints,
+                                         region="fra1")
+    if droplet_ip is not False:
+        hostname = droplet_ip
+    else:
+        sys.exit(0)
 
-    hostname = '209.38.225.160'
     username = 'root'
     private_key_path = PathManager().root.joinpath(".ssh/id_rsa")
-    repo_url = 'git@github.com:blue-hexagon/BashLAMP.git'
-    app_directory = '~'
+    repo_url = 'https://github.com/blue-hexagon/HyperSnitch.git'
+    app_directory = '~/hypersnitch'
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -64,13 +62,13 @@ if __name__ == '__main__':
     env_confs.append(("recipients", conf.smtp.recipients))
     commands = [
         "export DEBIAN_FRONTEND=noninteractive",
-        [f"echo export {env[0]}={env[1]} >> .bashrc" for env in env_confs],
+        *[f'echo "export {env[0]}={env[1]} >> ~/.bashrc"' for env in env_confs],
         "apt-get install -y git",
         "curl -sSL https://install.python-poetry.org | python3 -",
         'export PATH="$HOME/.local/bin:$PATH"',
         "source ~/.bashrc",
         f"git clone {repo_url} {app_directory}",
-        f"cd {app_directory} && /root/.local/bin/poetry init -n && /root/.local/bin/poetry run python main.py"
+        f"cd {app_directory} && /root/.local/bin/poetry install && /root/.local/bin/poetry run python main.py"
     ]
 
     for command in commands:

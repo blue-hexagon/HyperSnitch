@@ -68,7 +68,3 @@ class SshUtils:
     def read_private_key(self):
         with open(self.priv_key_path, "r") as priv_key:
             return priv_key.readline()
-if __name__ == "__main__":
-    sutils = SshUtils(keyfile_name="id_rsa")
-    sutils.create_ssh_key_pair(key_bits=4096)
-    print(sutils.read_public_key())

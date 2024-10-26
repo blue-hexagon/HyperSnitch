@@ -1,0 +1,30 @@
+[[app.scanner]]
+scan_interval = "0:00:00:10"
+scan_start = "07:00:00"
+scan_end = "20:00:00"
+scanner_id = "scanner1"
+
+[[app.scanner]]
+scan_interval = "0:00:00:10"
+scan_start = "06:00:00"
+scan_end = "20:00:00"
+scanner_id = "sc"
+
+[[app.targets]]
+target_id = "FINDBOLIG"
+target_url = "https://findbolig.nu/da-dk/udlejere/oestergaarden/ekstern-venteliste"
+target_string = "Lukket for opskrivning"
+message_subject = "ÅBENT FOR OPSKRIVNING!"
+message_body = "Der er åbent for opskrivning til Østergården! 🥳"
+alert_when_found = true
+#alert_when_not_found = true
+scanner_id = "scanner1"
+
+[[app.targets]]
+target_id = "GOOGLE"
+target_url = "https://www.google.com/"
+target_string = "Google offered"
+message_subject = "Found Google!"
+message_body = "Test scraper."
+alert_when_not_found = true
+scanner_id = "sc"

@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "websnitch"
+version = "0.1.0"
+description = ""
+authors = ["blue-hexagon <w0j8uhv5csio@opayq.net>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+playwright = "^1.48.0"
+toml = "^0.10.2"
+paramiko = "^3.5.0"
+requests = "^2.32.3"
+python-dotenv = "^1.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

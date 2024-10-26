@@ -78,9 +78,9 @@ class DeploymentController:
             f"cd {app_directory} && poetry run playwright install-deps",
             f"cd {app_directory} && poetry run playwright install",
             f"cd {app_directory} && chmod a+x *",
-            f"cp {app_directory}/deployment/systemd/hypersnitch.service /etc/systemd/system/hypersnitch.service",
-            f"systemctl daemon-reload"
-            f"sudo systemctl enable hypersnitch.service"
+            f"cp {app_directory}/src/deployment/systemd/hypersnitch.service /etc/systemd/system/hypersnitch.service",
+            f"systemctl daemon-reload",
+            f"sudo systemctl enable hypersnitch.service",
             f"sudo systemctl start hypersnitch.service"
         ]
 

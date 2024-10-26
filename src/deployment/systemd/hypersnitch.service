@@ -1,0 +1,14 @@
+[Unit]
+Description=HyperSnitch is a sophisticated webscraper
+After=network.target
+
+[Service]
+ExecStart=poetry run python /home/root/hypersnitch/main.py
+WorkingDirectory=/home/root/hypersnitch
+StandardOutput=journal
+StandardError=journal
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target

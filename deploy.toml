@@ -1,6 +1,6 @@
 [app.deploy.vps]
 vps_name="HyperSnitch"
-api_slug="s-1vcpu-512mb-10gb"
+api_slug="s-2vcpu-2gb-intel"
 image="debian-12-x64"
 count=1
 tags=['hypersnitch-primary']

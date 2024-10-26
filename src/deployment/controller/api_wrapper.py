@@ -110,7 +110,8 @@ class DOProvider:
         if type(tag) == str:
             response = requests.delete(cls.api_base_url + f"/droplets?tag_name={tag}", headers=cls.headers())
         elif type(tag) == list:
-            response = requests.delete(cls.api_base_url + f"/droplets?tag_name={tag}", headers=cls.headers())
+            for t in tag:
+                response = requests.delete(cls.api_base_url + f"/droplets?tag_name={t}", headers=cls.headers())
         if response.status_code == 204:
             cls.logger.info(f"Droplets with `{tag}` deleted successfully.")
             return True

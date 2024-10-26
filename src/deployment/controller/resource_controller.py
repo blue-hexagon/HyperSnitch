@@ -18,7 +18,7 @@ class DeploymentController:
 
         # Delete existing resources
         DOProvider.delete_ssh_key(config.ssh.pubkey_remote_name)
-        DOProvider.destroy_vps(config.vps.vps_name)
+        DOProvider.destroy_vps(config.vps.tags)
 
         # Create and upload SSH key
         sutils = SshUtils(keyfile_name=config.ssh.keyfile_name, passphrase=config.ssh.passphrase)
@@ -77,7 +77,11 @@ class DeploymentController:
             f"cd {app_directory} && poetry install",
             f"cd {app_directory} && poetry run playwright install-deps",
             f"cd {app_directory} && poetry run playwright install",
-            f"cd {app_directory} && poetry run python main.py",
+            f"cd {app_directory} && chmod a+x *",
+            f"cp {app_directory}/deployment/systemd/hypersnitch.service /etc/systemd/system/hypersnitch.service",
+            f"systemctl daemon-reload"
+            f"sudo systemctl enable hypersnitch.service"
+            f"sudo systemctl start hypersnitch.service"
         ]
 
         # Execute commands

@@ -64,15 +64,15 @@ class DeploymentController:
                      ("recipients", conf.smtp.recipients),
                      ("DEBIAN_FRONTEND", "noninteractive")]
 
-        app_directory = '~/hypersnitch'
+        app_directory = '/root/hypersnitch'
 
         commands = [
             "echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections",
-            *[f'echo "export {env[0]}={env[1]}" >> ~/.bashrc' for env in env_confs],
+            *[f'echo "export {env[0]}={env[1]}" >> /root/.bashrc' for env in env_confs],
             "apt-get install -y git",
             "curl -sSL https://install.python-poetry.org | python3 -",
-            """echo 'export PATH="~/.local/bin:$PATH"' >> .bashrc """,
-            "source ~/.bashrc",
+            """echo 'export PATH="/root/.local/bin:$PATH"' >> .bashrc """,
+            "source /root/.bashrc",
             f"git clone 'https://github.com/blue-hexagon/HyperSnitch.git' {app_directory}",
             f"cd {app_directory} && poetry install",
             f"cd {app_directory} && poetry run playwright install-deps",
@@ -98,7 +98,10 @@ class DeploymentController:
                     sleep(5)
                     continue
                 if error:
-                    logger.error(f"Error while executing command '{cmd}': {error.strip()}")
+                    try:
+                        logger.error(f"Error while executing command '{cmd}': {error.strip()}")
+                    except Exception as e:
+                        pass
                 if len(output) == 0:
                     # Silent command like `export
                     break

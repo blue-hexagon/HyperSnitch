@@ -3,7 +3,7 @@ Description=HyperSnitch is a sophisticated webscraper
 After=network.target
 
 [Service]
-ExecStart=poetry run python /root/hypersnitch/main.py
+ExecStart=/root/.local/bin/poetry run python /root/hypersnitch/main.py
 WorkingDirectory=/root/hypersnitch
 StandardOutput=journal
 StandardError=journal

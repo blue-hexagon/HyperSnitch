@@ -73,15 +73,18 @@ class DeploymentController:
             "curl -sSL https://install.python-poetry.org | python3 -",
             """echo 'export PATH="/root/.local/bin:$PATH"' >> .bashrc """,
             "source /root/.bashrc",
+            f"mkdir {app_directory}",
             f"git clone 'https://github.com/blue-hexagon/HyperSnitch.git' {app_directory}",
             f"cd {app_directory} && poetry install",
             f"cd {app_directory} && poetry run playwright install-deps",
             f"cd {app_directory} && poetry run playwright install",
             f"cd {app_directory} && chmod a+x *",
+            "touch /var/log/hypersnitch.log",
+            "chmod 644 /var/log/hypersnitch.log",
             f"cp {app_directory}/src/deployment/systemd/hypersnitch.service /etc/systemd/system/hypersnitch.service",
             f"systemctl daemon-reload",
-            f"sudo systemctl enable hypersnitch.service",
-            f"sudo systemctl start hypersnitch.service"
+            f"systemctl enable hypersnitch.service",
+            f"systemctl start hypersnitch.service",
         ]
 
         # Execute commands

@@ -1,5 +1,6 @@
 import sys
 from threading import Thread
+from typing import List
 
 from src.main.conf.conf_classes import ScannerConfig
 from src.main.conf.conf_parser import ConfigLoader
@@ -11,16 +12,25 @@ from src.utils.logger import ConsoleLogger
 
 class Executor:
     @staticmethod
-    def run_scraper() -> None:
+    def deploy_threads() -> List[Thread]:
         logger = ConsoleLogger().logger
-        try:
-            scanners = ConfigLoader().load_config().scanners
-            targets = ConfigLoader().load_config().targets
-            logger.info("Loaded scanner and target configurations.")
-            for target in targets:
-                scanner = ScannerConfig.get_scanner_by_id(scanners, target.scanner_id)
-                event_result = EventResult()
-                logger.info(f"Deploying new thread for {target.target_id}")
-                Thread(target=Scanner().run_scanner, args=[scanner, (Scraper.scrape_target, target, event_result)]).start()
-        except KeyboardInterrupt:
-            sys.exit(0)
+        threads: List[Thread] = []
+        scanners = ConfigLoader().load_config().scanners
+        targets = ConfigLoader().load_config().targets
+        logger.info("Loaded scanner and target configurations.")
+        for target in targets:
+            scanner = ScannerConfig.get_scanner_by_id(scanners, target.scanner_id)
+            event_result = EventResult()
+            logger.info(f"Deploying new thread for {target.target_id}")
+            threads.append(Thread(target=Scanner().run_scanner, args=[scanner, (Scraper.scrape_target, target, event_result)]))
+        return threads
+
+    @staticmethod
+    def start_threads(threads: List[Thread]) -> None:
+        for thread in threads:
+            thread.start()
+
+    @staticmethod
+    def run():
+        threads = Executor.deploy_threads()
+        Executor.start_threads(threads)

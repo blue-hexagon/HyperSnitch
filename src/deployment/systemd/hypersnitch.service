@@ -1,17 +1,20 @@
 [Unit]
-Description=HyperSnitch is a sophisticated webscraper that queries websites for certain found or missing strings
+Description=HyperSnitch is a simple webscraper that queries websites for certain found or missing strings and sends email notifications of these events
 After=network.target
 
 [Service]
 Type=simple
 Environment="PATH=/root/.local/bin:/root/hypersnitch:$PATH"
+Environment="PYTHONPATH=/root/hypersnitch/src"
 ExecStart=/root/.local/bin/poetry run python /root/hypersnitch/main.py
 WorkingDirectory=/root/hypersnitch
-StandardOutput=journal
-StandardError=journal
 Restart=always
 RestartSec=3
 User=root
+StandardOutput=journal
+StandardError=journal
+StandardOutput=append:/var/log/hypersnitch.log
+StandardError=append:/var/log/hypersnitch.log
 
 [Install]
 WantedBy=multi-user.target

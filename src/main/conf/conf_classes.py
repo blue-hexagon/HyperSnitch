@@ -14,7 +14,7 @@ class SMTPConfig:
     smtp_username: str
     smtp_password: str
     sender: str
-    recipients: List[str]
+    recipients: str
 
 
 @dataclass

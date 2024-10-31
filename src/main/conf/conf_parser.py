@@ -16,12 +16,16 @@ class ConfigLoader(metaclass=Singleton):
 
         smtp_config = SMTPConfig(
             smtp_server=os.getenv('smtp_server'),
-            smtp_port=int(os.getenv('smtp_port')),
+            smtp_port=os.getenv('smtp_port'),
             smtp_username=os.getenv('smtp_username'),
             smtp_password=os.getenv('smtp_password'),
             sender=os.getenv('sender'),
-            recipients=os.getenv('recipients').split(","),
+            recipients=os.getenv('recipients'),
         )
+        if "," in smtp_config.recipients:
+            smtp_config.recipients = smtp_config.recipients.split(",")
+        if type(smtp_config.smtp_port) == str:
+            smtp_config.smtp_port = int(smtp_config.smtp_port)
         scanner = [
             ScannerConfig(
                 scan_interval=scanner['scan_interval'],

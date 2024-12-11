@@ -14,9 +14,7 @@ class Scraper:
         logger = ConsoleLogger()
         logger.info("Entering scraper")
         with sync_playwright() as p:
-            logger.info("Entering playwright-with - launching chrome")
             browser = p.chromium.launch(headless=True)
-            logger.info("launched chrome")
             page = browser.new_page()
             logger.info(f"[{target_id}] Start searching for `{search_string}` on: {get_subdomain_domain_tld(url)}")
             page.goto(url)

@@ -18,7 +18,7 @@ class ConsoleLogger(metaclass=Singleton):
 
         # File Handler
         log_file_path = PathManager().root.joinpath('app.log')
-        file_handler = logging.FileHandler(log_file_path,encoding="utf-8")
+        file_handler = logging.FileHandler(log_file_path, encoding="utf-8")
         file_handler.setLevel(logging.DEBUG)
         file_handler.setFormatter(formatter)
         self.logger.addHandler(file_handler)

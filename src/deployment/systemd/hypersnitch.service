@@ -4,15 +4,13 @@ After=network.target
 
 [Service]
 Type=simple
-Environment="PATH=/root/.local/bin:/root/hypersnitch:$PATH"
-Environment="PYTHONPATH=/root/hypersnitch/src"
-ExecStart=/root/.local/bin/poetry run python /root/hypersnitch/main.py
+Environment="PATH=/root/.local/bin:/root/hypersnitch"
+Environment="PYTHONPATH=/root/hypersnitch"
+ExecStart=/bin/bash -c 'source /root/.bashrc && /root/.local/bin/poetry run python /root/hypersnitch/main.py'
 WorkingDirectory=/root/hypersnitch
-Restart=always
-RestartSec=3
+Restart=on-failure
+RestartSec=10
 User=root
-StandardOutput=journal
-StandardError=journal
 StandardOutput=append:/var/log/hypersnitch.log
 StandardError=append:/var/log/hypersnitch.log
 

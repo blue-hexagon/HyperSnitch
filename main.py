@@ -1,5 +1,6 @@
+import os
 import platform
-
+import sys
 
 from src.utils.logger import ConsoleLogger
 
@@ -12,6 +13,11 @@ if __name__ == '__main__':
         DeploymentController()
     else:
         """ Running on Linux server """
+        # Extensive diagnostic logging
+        logger.info("Starting application")
+        logger.debug(f"Current working directory: {os.getcwd()}")
+        logger.debug(f"Python executable: {sys.executable}")
+        logger.debug(f"Python path: {sys.path}")
+        logger.debug(f"Environment variables: {os.environ}")
         from src.main.controller.executor import Executor
-        logger.info("Running ExecutionController on Linux")
         Executor.run()

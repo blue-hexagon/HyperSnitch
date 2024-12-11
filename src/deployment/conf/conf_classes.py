@@ -24,9 +24,16 @@ class SSHConfig:
 class FolderConfig:
     folder: str
 
+@dataclass
+class DomainConfig:
+    domain_name: str
+    subdomain: str
+    ipv4: str
 
 @dataclass
 class DeployConfig:
     vps: VPSConfig
     ssh: SSHConfig
     folder: FolderConfig
+    domain: DomainConfig
+

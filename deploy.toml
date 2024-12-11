@@ -1,16 +1,21 @@
 [app.deploy.vps]
-vps_name="HyperSnitch"
-api_slug="s-2vcpu-2gb-amd"
-image="debian-12-x64"
-count=1
-tags=['hypersnitch-primary']
-region="fra1"
+vps_name = "HyperSnitch"
+api_slug = "s-2vcpu-4gb" #""s-1vcpu-1gb" # 6$/month, checkout for other options: https://slugs.do-api.dev/
+image = "debian-12-x64"
+count = 1
+tags = ['hypersnitch-primary']
+region = "fra1" # Checkout for other options: https://slugs.do-api.dev/
 
 [app.deploy.ssh]
-keyfile_name="id_rsa"
-pubkey_remote_name="HyperSnitchKey"
-passphrase="rootroot"
-key_bits=4096
+keyfile_name = "id_rsa"
+pubkey_remote_name = "HyperSnitchKey"
+passphrase = "rootroot"
+key_bits = 4096
 
 [app.deploy.folder]
-folder="~/hypersnitch"
+folder = "~/hypersnitch"
+
+[app.deploy.domain]
+domain_name = "greenpower.monster"
+subdomain = "smtp"
+ipv4 = "0.0.0.0"

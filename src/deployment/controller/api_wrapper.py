@@ -7,13 +7,15 @@ import requests
 from src.main.conf.conf_parser import ConfigLoader
 from src.utils.logger import ConsoleLogger
 
+API_VERSION = "v2"
+
 
 class DOProvider:
     """
         This class ins't pretty, it works for the purpose
         but could make use of some refactoring and additonal HTTP status checks branching
      """
-    api_base_url = "https://api.digitalocean.com/v2"
+    api_base_url = f"https://api.digitalocean.com/{API_VERSION}"
     api_key: str = ConfigLoader().load_config(with_env=True).digital_ocean.api_key
     logger = ConsoleLogger()
 
@@ -45,7 +47,7 @@ class DOProvider:
             cls.logger.info(f"Droplet(s) with name(s):`{droplet_name}` successfully: {response.json()}")
             cls.logger.info(f"Droplet info: {response.json()}")
             droplet_id = response.json()['droplets'][0]['id']
-            droplet_detail_url = f'https://api.digitalocean.com/v2/droplets/{droplet_id}'
+            droplet_detail_url = f'https://api.digitalocean.com/{API_VERSION}/droplets/{droplet_id}'
             while True:
                 detail_response = requests.get(droplet_detail_url, headers=cls.headers())
                 if detail_response.status_code == 200:
@@ -139,3 +141,39 @@ class DOProvider:
                 cls.logger.info("Deleted SSH key successfully!")
             else:
                 cls.logger.error(f"Failed to delete SSH key, error: {response.status_code}")
+
+    @classmethod
+    def destroy_domain(cls, domain: str) -> bool:
+        response = requests.delete(cls.api_base_url + f"/domains/{domain}", headers=cls.headers())
+        if response.status_code == 204:
+            cls.logger.info(f"Domain:`{domain}` deleted successfully.")
+            return True
+        else:
+            cls.logger.error(f"Failed to delete domain: `{domain}. Probably didn't exist.")
+            return False
+
+    @classmethod
+    def configure_domain(cls, domain_name):
+        data = {
+            "name": domain_name,
+        }
+        response = requests.post(f"{cls.api_base_url}/domains", headers=cls.headers(), json=data)
+        if response.status_code == 201:
+            cls.logger.info(f"Created domain: {domain_name} successfully!")
+        else:
+            cls.logger.error(f"Failed to create domain: {domain_name} - {response.status_code}")
+
+    @classmethod
+    def configure_domain_records(cls, domain_name,subdomain, ipv4):
+        data = {
+                "type": "A",
+                "name": subdomain,
+                "data": ipv4,
+                "ttl": 60,
+        }
+        response = requests.post(f"{cls.api_base_url}/domains/{domain_name}/records", headers=cls.headers(), json=data)
+        if response.status_code == 201:
+            cls.logger.info(f"Created A record {ipv4} for: {domain_name} successfully!")
+        else:
+            cls.logger.error(f"Failed to create A record for: {domain_name} - {response.status_code}")
+        return response.json()

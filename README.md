@@ -1,6 +1,6 @@
 # HyperSnitch
 
-HyperSnitch is a powerful web monitoring tool designed to scan websites for specific strings, notifying users when changes occur. It can be used to track registration openings (e.g., for apartment complexes), monitor content updates, or detect specific text on target URLs.
+HyperSnitch is a simple web monitoring tool designed to scan websites for specific strings, notifying users when changes occur. It can be used to track registration openings (e.g., for apartment complexes), monitor content updates, or detect specific text on target URLs.
 
 ## Features
 - **Website Monitoring**: Scan websites at regular intervals to detect specific content or changes.

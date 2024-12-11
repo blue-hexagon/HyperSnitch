@@ -17,20 +17,21 @@ class Executor:
         threads: List[Thread] = []
         scanners = ConfigLoader().load_config().scanners
         targets = ConfigLoader().load_config().targets
-        logger.info("Loaded scanner and target configurations.")
         for target in targets:
             scanner = ScannerConfig.get_scanner_by_id(scanners, target.scanner_id)
             event_result = EventResult()
-            logger.info(f"Deploying new thread for {target.target_id}")
+            logger.info(f"Creating (but not starting) new thread for {target.target_id}")
             threads.append(Thread(target=Scanner().run_scanner, args=[scanner, (Scraper.scrape_target, target, event_result)]))
         return threads
 
     @staticmethod
     def start_threads(threads: List[Thread]) -> None:
+        ConsoleLogger().info("Starting threads")
         for thread in threads:
             thread.start()
 
     @staticmethod
     def run():
         threads = Executor.deploy_threads()
+        ConsoleLogger().info("Retrieved threads")
         Executor.start_threads(threads)

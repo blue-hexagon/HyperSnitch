@@ -19,6 +19,7 @@ class DeploymentController:
         # Delete existing resources
         DOProvider.delete_ssh_key(config.ssh.pubkey_remote_name)
         DOProvider.destroy_vps(config.vps.tags)
+        DOProvider.destroy_domain(config.domain.domain_name)
 
         # Create and upload SSH key
         sutils = SshUtils(keyfile_name=config.ssh.keyfile_name, passphrase=config.ssh.passphrase)
@@ -31,6 +32,8 @@ class DeploymentController:
         droplet_ip = DOProvider().create_vps(droplet_name=config.vps.vps_name, api_slug=config.vps.api_slug, image=config.vps.image,
                                              count=config.vps.count, tag=config.vps.tags, ssh_keys=ssh_key_fingerprints,
                                              region=config.vps.region)
+        DOProvider().configure_domain(domain_name=config.domain.domain_name)
+        DOProvider().configure_domain_records(domain_name=config.domain.domain_name, subdomain=config.domain.subdomain, ipv4=droplet_ip)
 
         # Setup Paramiko
         ssh = paramiko.SSHClient()
@@ -69,7 +72,7 @@ class DeploymentController:
         commands = [
             "echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections",
             *[f'echo "export {env[0]}={env[1]}" >> /root/.bashrc' for env in env_confs],
-            "apt-get install -y git",
+            "apt-get install -y git dnsutils",
             "curl -sSL https://install.python-poetry.org | python3 -",
             """echo 'export PATH="/root/.local/bin:$PATH"' >> .bashrc """,
             "source /root/.bashrc",
@@ -85,6 +88,8 @@ class DeploymentController:
             f"systemctl daemon-reload",
             f"systemctl enable hypersnitch.service",
             f"systemctl start hypersnitch.service",
+            f"chmod a+x {app_directory}/src/deployment/smtp_server/*",
+            f"chmod a+x ./smtp_installer.sh",
         ]
 
         # Execute commands
@@ -102,11 +107,11 @@ class DeploymentController:
                     continue
                 if error:
                     try:
-                        logger.error(f"Error while executing command '{cmd}': {error.strip()}")
+                        logger.error(f"Error while executing command '{cmd}' (if subprocess probably a false positive): {error.strip()}")
                     except Exception as e:
                         pass
                 if len(output) == 0:
-                    # Silent command like `export
+                    # Silent command like `export`
                     break
                 if output:
                     logger.info(f"Output: {output.strip()}")

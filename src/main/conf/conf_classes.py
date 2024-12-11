@@ -10,7 +10,7 @@ class DigitalOcean:
 @dataclass
 class SMTPConfig:
     smtp_server: str
-    smtp_port: int
+    smtp_port: str
     smtp_username: str
     smtp_password: str
     sender: str

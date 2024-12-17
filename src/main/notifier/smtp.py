@@ -3,6 +3,7 @@ from email.mime.text import MIMEText
 from dataclasses import dataclass
 from typing import List
 
+from src.main.conf.conf_parser import ConfigLoader
 from src.utils.logger import ConsoleLogger
 
 
@@ -30,3 +31,19 @@ def send_email(config: SMTPConfig, subject: str, body: str):
             logger.info(f"Email [{subject}] sent successfully!")
     except Exception as e:
         logger.info(f"Failed to send email. Error: {str(e)}")
+
+
+if __name__ == '__main__':
+    import smtplib
+
+    server = smtplib.SMTP_SSL('smtp.greenpower.monster', 587)
+    server.login('noreply@greenpower.monster', 'Kode1234!')
+
+    message = """\
+    From: you@greenpower.monster
+    To: mailprox@pm.me
+    Subject: Test Email
+
+    This is a test email from Python."""
+    server.sendmail('you@greenpower.monster', 'mailprox@pm.me', message)
+    server.quit()

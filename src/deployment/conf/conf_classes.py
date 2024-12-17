@@ -28,7 +28,10 @@ class FolderConfig:
 class DomainConfig:
     domain_name: str
     subdomain: str
-    ipv4: str
+    ttl: int
+    spf: str
+    dmarc: str
+    dkim: str
 
 @dataclass
 class DeployConfig:

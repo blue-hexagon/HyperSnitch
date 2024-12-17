@@ -27,13 +27,19 @@ class DeploymentController:
         pub_key = sutils.read_public_key()
         DOProvider().add_ssh_key(config.ssh.pubkey_remote_name, pub_key)
 
-        # Get SSH key fingerprint and create VPS
+        # Get SSH key fingerprint and create VPS + Domain
         ssh_key_fingerprints = DOProvider().get_ssh_key_fingerprints_from_names([config.ssh.pubkey_remote_name])
         droplet_ip = DOProvider().create_vps(droplet_name=config.vps.vps_name, api_slug=config.vps.api_slug, image=config.vps.image,
                                              count=config.vps.count, tag=config.vps.tags, ssh_keys=ssh_key_fingerprints,
                                              region=config.vps.region)
         DOProvider().configure_domain(domain_name=config.domain.domain_name)
-        DOProvider().configure_domain_records(domain_name=config.domain.domain_name, subdomain=config.domain.subdomain, ipv4=droplet_ip)
+        DOProvider().configure_domain_records(domain_name=config.domain.domain_name,
+                                              subdomain=config.domain.subdomain,
+                                              ipv4=droplet_ip,
+                                              ttl=config.domain.ttl,
+                                              spf=config.domain.spf,
+                                              dmarc=config.domain.dmarc,
+                                              dkim=config.domain.dkim)
 
         # Setup Paramiko
         ssh = paramiko.SSHClient()
@@ -89,7 +95,7 @@ class DeploymentController:
             f"systemctl enable hypersnitch.service",
             f"systemctl start hypersnitch.service",
             f"chmod a+x {app_directory}/src/deployment/smtp_server/*",
-            f"chmod a+x ./smtp_installer.sh",
+            f"chmod a+x {app_directory}/smtp_installer.sh",
         ]
 
         # Execute commands
@@ -117,3 +123,9 @@ class DeploymentController:
                     logger.info(f"Output: {output.strip()}")
                     break
         ssh.close()
+        print(f"Deployment finished. If everything went well the next step is to wait for A-record propagation. "
+              f"TTL is set to 30 minutes - wait an hour or two, and then SSH into the server and run "
+              f"`./root/hypersnitch/smtp_install.sh` which will setup an SMTP server for sending notifications.")
+        print("You can also modify the TTL to 60 seconds if you're in a hurry and re-adjust it later."
+              "The script will do a check every 60 seconds for 60 minutes and proceed to install an SSL cert and "
+              "setup the postfix SMTP server once the A record has propagated.")

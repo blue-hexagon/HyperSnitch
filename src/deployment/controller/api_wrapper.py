@@ -164,16 +164,29 @@ class DOProvider:
             cls.logger.error(f"Failed to create domain: {domain_name} - {response.status_code}")
 
     @classmethod
-    def configure_domain_records(cls, domain_name,subdomain, ipv4):
+    def configure_domain_records(cls, domain_name, subdomain, ipv4, ttl,spf,dmarc,dkim):
         data = {
-                "type": "A",
-                "name": subdomain,
-                "data": ipv4,
-                "ttl": 60,
+            "type": "A",
+            "name": subdomain,
+            "data": ipv4,
+            "ttl": ttl
         }
         response = requests.post(f"{cls.api_base_url}/domains/{domain_name}/records", headers=cls.headers(), json=data)
         if response.status_code == 201:
             cls.logger.info(f"Created A record {ipv4} for: {domain_name} successfully!")
         else:
             cls.logger.error(f"Failed to create A record for: {domain_name} - {response.status_code}")
+        data.clear()
+        data = {
+            "type": "MX",
+            "name": f"{domain_name}",
+            "data": f"{subdomain}.{domain_name}.",
+            "priority": 10,
+            "ttl": ttl,
+        }
+        response = requests.post(f"{cls.api_base_url}/domains/{domain_name}/records", headers=cls.headers(), json=data)
+        if response.status_code == 201:
+            cls.logger.info(f"Created MX record {ipv4} for: {domain_name} successfully!")
+        else:
+            cls.logger.error(f"Failed to create MX record for: {domain_name} - {response.status_code}")
         return response.json()

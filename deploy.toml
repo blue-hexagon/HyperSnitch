@@ -1,6 +1,6 @@
 [app.deploy.vps]
 vps_name = "HyperSnitch"
-api_slug = "s-2vcpu-4gb" #""s-1vcpu-1gb" # 6$/month, checkout for other options: https://slugs.do-api.dev/
+api_slug = "s-2vcpu-2gb-90gb-intel" # ""s-1vcpu-1gb" = 6$/month - checkout for other options: https://slugs.do-api.dev/
 image = "debian-12-x64"
 count = 1
 tags = ['hypersnitch-primary']
@@ -18,4 +18,7 @@ folder = "~/hypersnitch"
 [app.deploy.domain]
 domain_name = "greenpower.monster"
 subdomain = "smtp"
-ipv4 = "0.0.0.0"
+ttl = "1800"
+spf = "v=spf1 include:smtp.greenpower.monster ~all"
+dmarc = "v=DMARC1; p=reject; rua=mailto:reports@greenpower.monster;"
+dkim = ""

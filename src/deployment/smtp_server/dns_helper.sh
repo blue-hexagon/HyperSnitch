@@ -1,8 +1,9 @@
 check_dns_propagation() {
     local domain="$1"
     local expected_ip="$2"
-    local max_attempts=${3:-10} # 10 attempts
-    local wait_interval=${4:-60}  # 1 minutes between checks
+    local max_attempts=${3:-60}
+    local wait_interval=${4:-60}
+    echo "Will check DNS propagation every sixty seconds for 60 minutes."
 
     for ((attempt=1; attempt<=max_attempts; attempt++)); do
         current_ip=$(dig +short "$domain")
